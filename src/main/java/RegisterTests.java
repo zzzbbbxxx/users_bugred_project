@@ -13,56 +13,18 @@ import static org.hamcrest.core.IsEqual.equalTo;
 
 public class RegisterTests extends BaseReq {
 
-    @DataProvider(name = "DataProvider1")
-    public Object[][] parameterTestProvider_test14() {
-        return new Object[][] {
-                {""},
-                {"12"},
-        };
-    }
-
-    // Tests for page_size = empty, 1.5, one
-    // ...status code = 200
-    // ...structure of json = errorscheme
-    @Test(dataProvider = "DataProvider1")
-    public void registerByValidRole(String email) {
-
-        RestAssured.baseURI = BaseReq.PATH;
-        RequestSpecification request = RestAssured.given();
-
-        JSONObject requestParams = new JSONObject();
-        requestParams.put("email", email);
-        requestParams.put("name", "...");
-        requestParams.put("password", "...");
-
-        request.header("Content-Type", "application/json");
-
-        request.body(requestParams.toString());
-
-        Response response = request.post("/doregister");
-
-        int statusCode = response.getStatusCode();
-        Assert.assertEquals(statusCode, 200);
-
-        System.out.println(response.getStatusCode());
-
-
-    }
-
-
-    @Test(dataProvider = "DataProvider1")
-    public void getUserDetails(String email) {
+    @Test(description = "email is required field")
+    public void emailIsRequired() {
 
         RestAssured.baseURI = PATH;
 
         // use org.json JSONObject to define your json
         JSONObject jsonObj = new JSONObject()
-                .put("email", email)
-                .put("name", email+"...")
-                .put("password", "...");
+                .put("name", "Машенька")
+                .put("password","12345678");
 
         given()
-     // port number
+                // port number
                 .contentType("application/json")  //another way to specify content type
                 .body(jsonObj.toString())   // use jsonObj toString method
                 .when()
@@ -71,7 +33,112 @@ public class RegisterTests extends BaseReq {
                 .assertThat()
                 .statusCode(200)
                 .body("type", equalTo("error"))
-                .body("message",equalTo("Некоректный  email"+" "+email));
+                .body("message", equalTo("Параметр email является обязательным!"));
+
+    }
+
+    @Test(description = "name is required field")
+    public void nameIsRequired() {
+
+        RestAssured.baseURI = PATH;
+
+        // use org.json JSONObject to define your json
+        JSONObject jsonObj = new JSONObject()
+                .put("email", "milli@mail.ru")
+                .put("password", "12345678");
+
+
+        given()
+                // port number
+                .contentType("application/json")  //another way to specify content type
+                .body(jsonObj.toString())   // use jsonObj toString method
+                .when()
+                .post("/doregister")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("type", equalTo("error"))
+                .body("message", equalTo("Параметр name является обязательным!"));
+
+    }
+
+
+    @Test(description = "password is required field")
+    public void passwordIsRequired() {
+
+        RestAssured.baseURI = PATH;
+
+        // use org.json JSONObject to define your json
+        JSONObject jsonObj = new JSONObject()
+                .put("email", "milli@mail.ru")
+                .put("name", "Машенька");
+
+        given()
+                // port number
+                .contentType("application/json")  //another way to specify content type
+                .body(jsonObj.toString())   // use jsonObj toString method
+                .when()
+                .post("/doregister")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("type", equalTo("error"))
+                .body("message", equalTo("Параметр password является обязательным!"));
+
+    }
+
+
+
+    @Test(description = "mail is already in use")
+    public void emailIsExist() {
+
+        RestAssured.baseURI = PATH;
+
+        // use org.json JSONObject to define your json
+        JSONObject jsonObj = new JSONObject()
+                .put("email", "milli@mail.ru")
+                .put("name", "Машенька")
+                .put("password", "12345678");
+
+        given()
+                // port number
+                .contentType("application/json")  //another way to specify content type
+                .body(jsonObj.toString())   // use jsonObj toString method
+                .when()
+                .post("/doregister")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("type", equalTo("error"))
+                .body("message",
+                        equalTo(" email milli@mail.ru уже есть в базе"));
+
+    }
+
+
+    @Test(description = "name is already in use")
+    public void nameIsExist() {
+
+        RestAssured.baseURI = PATH;
+
+        // use org.json JSONObject to define your json
+        JSONObject jsonObj = new JSONObject()
+                .put("email", "millimillimillimilli@mail.ru")
+                .put("name", "Машенька")
+                .put("password", "12345678");
+
+        given()
+                // port number
+                .contentType("application/json")  //another way to specify content type
+                .body(jsonObj.toString())   // use jsonObj toString method
+                .when()
+                .post("/doregister")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("type", equalTo("error"))
+                .body("message",
+                        equalTo(" Текущее ФИО Машенька уже есть в базе"));
 
     }
 
