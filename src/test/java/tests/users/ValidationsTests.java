@@ -1,68 +1,38 @@
+package tests.users;
+
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import org.json.JSONObject;
-import org.junit.Assert;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import restAssured.BaseReq;
+import restAssured.Utils;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasKey;
-//import static org.hamcrest.core.IsEqual.equalTo;
 
-public class RegisterTests extends BaseReq {
+public class ValidationsTests extends BaseReq {
 
-
-
-    @Test(description = "success registration")
-    public void successRegistration() {
-
-        RestAssured.baseURI = PATH;
-
-        Utils x = new Utils();
-        String name = x.randomIdentifier();
-
-        // use org.json JSONObject to define your json
-        JSONObject jsonObj = new JSONObject()
-                .put("email", name+"@mail.ru")
-                .put("name", name)
-                .put("password", "12345678");
-
-        given()
-                // port number
-                .contentType("application/json")  //another way to specify content type
-                .body(jsonObj.toString())   // use jsonObj toString method
-                .when()
-                .post("/doregister")
-                .then()
-                .assertThat()
-                .statusCode(200)
-                .body("$",hasKey("name"))
-                .body("$", hasKey("avatar"))
-                .body("$", hasKey("password"))
-                .body("$", hasKey("birthday"))
-                .body("$", hasKey("email"))
-                .body("$", hasKey("gender"))
-                .body("$", hasKey("date_start"))
-                .body("$", hasKey("hobby"));
+    @DataProvider(name = "Data-Provider-Function_test7")
+    public Object[][] parameterTestProvider_test7() {
+        return new Object[][] {
+                {"email", ""},
+                {"" , ""}
+        };
     }
 
 
-    @Test(description = "email is required field")
-    public void emailIsRequired() {
+    @Test(dataProvider = "Data-Provider-Function_test7",
+            description = "email is required field")
+    public void emailIsRequired(String key, String value) {
 
-        RestAssured.baseURI = PATH;
-
-        // use org.json JSONObject to define your json
         JSONObject jsonObj = new JSONObject()
+                .put(key , value)
                 .put("name", "Машенька")
                 .put("password","12345678");
 
         given()
-                // port number
+                .baseUri(BaseReq.PATH)
                 .contentType("application/json")  //another way to specify content type
                 .body(jsonObj.toString())   // use jsonObj toString method
                 .when()
@@ -78,7 +48,7 @@ public class RegisterTests extends BaseReq {
     @Test(description = "name is required field")
     public void nameIsRequired() {
 
-        RestAssured.baseURI = PATH;
+        RestAssured.baseURI = BaseReq.PATH;
 
         // use org.json JSONObject to define your json
         JSONObject jsonObj = new JSONObject()
@@ -104,7 +74,7 @@ public class RegisterTests extends BaseReq {
     @Test(description = "password is required field")
     public void passwordIsRequired() {
 
-        RestAssured.baseURI = PATH;
+        RestAssured.baseURI = BaseReq.PATH;
 
         // use org.json JSONObject to define your json
         JSONObject jsonObj = new JSONObject()
@@ -130,7 +100,7 @@ public class RegisterTests extends BaseReq {
     @Test(description = "mail is already in use")
     public void emailIsExist() {
 
-        RestAssured.baseURI = PATH;
+        RestAssured.baseURI = BaseReq.PATH;
 
         Utils x = new Utils();
         String name = x.randomIdentifier();
@@ -159,7 +129,7 @@ public class RegisterTests extends BaseReq {
     @Test(description = "name is already in use")
     public void nameIsExist() {
 
-        RestAssured.baseURI = PATH;
+        RestAssured.baseURI = BaseReq.PATH;
 
         Utils x = new Utils();
         String name = x.randomIdentifier();

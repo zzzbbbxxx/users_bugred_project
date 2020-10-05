@@ -1,3 +1,5 @@
+package restAssured;
+
 import com.google.gson.Gson;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;

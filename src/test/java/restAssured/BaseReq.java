@@ -1,3 +1,5 @@
+package restAssured;
+
 public class BaseReq {
 
 
