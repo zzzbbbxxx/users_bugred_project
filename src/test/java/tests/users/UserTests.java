@@ -10,30 +10,24 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasKey;
 
-public class CreateUsersTests extends BaseReq {
-
+public class UserTests extends UserBase {
 
 
     @Test(description = "success registration")
     public void successRegistration() {
 
-        RestAssured.baseURI = BaseReq.PATH;
+        String name = Utils.randomIdentifier();
 
-        Utils x = new Utils();
-        String name = x.randomIdentifier();
-
-        // use org.json JSONObject to define your json
         JSONObject jsonObj = new JSONObject()
                 .put("email", name+"@mail.ru")
                 .put("name", name)
                 .put("password", "12345678");
 
         given()
-                // port number
-                .contentType("application/json")  //another way to specify content type
+                .spec(requestSpec)
                 .body(jsonObj.toString())   // use jsonObj toString method
                 .when()
-                .post("/doregister")
+                .post()
                 .then()
                 .assertThat()
                 .statusCode(200)

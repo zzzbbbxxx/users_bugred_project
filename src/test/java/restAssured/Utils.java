@@ -5,14 +5,13 @@ import java.util.Set;
 
 public class Utils {
 
-    final java.util.Random rand = new java.util.Random();
+    public static String randomIdentifier() {
 
-    final String lexicon = "abcdefghijklmnopqrstuvwxyz";
-
-    final Set<String> identifiers = new HashSet<String>();
-
-    public String randomIdentifier() {
+        java.util.Random rand = new java.util.Random();
+        String lexicon = "abcdefghijklmnopqrstuvwxyz";
         StringBuilder builder = new StringBuilder();
+        Set<String> identifiers = new HashSet<String>();
+
         while(builder.toString().length() == 0) {
             int length = rand.nextInt(5)+5;
             for(int i = 0; i < length; i++) {

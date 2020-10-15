@@ -8,10 +8,11 @@ import restAssured.BaseReq;
 import restAssured.Utils;
 
 import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.requestSpecification;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasKey;
 
-public class ValidationsTests extends BaseReq {
+public class UserValidationsTests extends UserBase {
 
     @DataProvider(name = "Data-Provider-Function_test7")
     public Object[][] parameterTestProvider_test7() {
@@ -32,41 +33,30 @@ public class ValidationsTests extends BaseReq {
                 .put("password","12345678");
 
         given()
-                .baseUri(BaseReq.PATH)
-                .contentType("application/json")  //another way to specify content type
+                .spec(requestSpec)
                 .body(jsonObj.toString())   // use jsonObj toString method
                 .when()
-                .post("/doregister")
+                .post()
                 .then()
-                .assertThat()
-                .statusCode(400)
-                .body("type", equalTo("error"))
-                .body("message", equalTo("Параметр email является обязательным!"));
+                .spec(getResponseSpec("Параметр email является обязательным!"));
 
     }
 
     @Test(description = "name is required field")
     public void nameIsRequired() {
 
-        RestAssured.baseURI = BaseReq.PATH;
-
-        // use org.json JSONObject to define your json
         JSONObject jsonObj = new JSONObject()
                 .put("email", "milli@mail.ru")
                 .put("password", "12345678");
 
 
         given()
-                // port number
-                .contentType("application/json")  //another way to specify content type
+                .spec(requestSpec)
                 .body(jsonObj.toString())   // use jsonObj toString method
                 .when()
-                .post("/doregister")
+                .post()
                 .then()
-                .assertThat()
-                .statusCode(400)
-                .body("type", equalTo("error"))
-                .body("message", equalTo("Параметр name является обязательным!"));
+                .spec(getResponseSpec("Параметр name является обязательным!"));
 
     }
 
@@ -74,24 +64,17 @@ public class ValidationsTests extends BaseReq {
     @Test(description = "password is required field")
     public void passwordIsRequired() {
 
-        RestAssured.baseURI = BaseReq.PATH;
-
-        // use org.json JSONObject to define your json
         JSONObject jsonObj = new JSONObject()
                 .put("email", "milli@mail.ru")
                 .put("name", "Машенька");
 
         given()
-                // port number
-                .contentType("application/json")  //another way to specify content type
+                .spec(requestSpec)
                 .body(jsonObj.toString())   // use jsonObj toString method
                 .when()
-                .post("/doregister")
+                .post()
                 .then()
-                .assertThat()
-                .statusCode(400)
-                .body("type", equalTo("error"))
-                .body("message", equalTo("Параметр password является обязательным!"));
+                .spec(getResponseSpec("Параметр password является обязательным!"));
 
     }
 
@@ -100,10 +83,7 @@ public class ValidationsTests extends BaseReq {
     @Test(description = "mail is already in use")
     public void emailIsExist() {
 
-        RestAssured.baseURI = BaseReq.PATH;
-
-        Utils x = new Utils();
-        String name = x.randomIdentifier();
+        String name = Utils.randomIdentifier();
 
         // use org.json JSONObject to define your json
         JSONObject jsonObj = new JSONObject()
@@ -112,16 +92,12 @@ public class ValidationsTests extends BaseReq {
                 .put("password", "12345678");
 
         given()
-                // port number
-                .contentType("application/json")  //another way to specify content type
+                .spec(requestSpec)
                 .body(jsonObj.toString())   // use jsonObj toString method
                 .when()
                 .post("/doregister")
                 .then()
-                .assertThat()
-                .statusCode(400)
-                .body("type", equalTo("error"))
-                .body("message", equalTo(" email milli@mail.ru уже есть в базе"));
+                .spec(getResponseSpec(" email milli@mail.ru уже есть в базе"));
 
     }
 
@@ -129,29 +105,21 @@ public class ValidationsTests extends BaseReq {
     @Test(description = "name is already in use")
     public void nameIsExist() {
 
-        RestAssured.baseURI = BaseReq.PATH;
 
-        Utils x = new Utils();
-        String name = x.randomIdentifier();
+        String name = Utils.randomIdentifier();
 
-        // use org.json JSONObject to define your json
         JSONObject jsonObj = new JSONObject()
                 .put("email", name+"@mail.ru")
                 .put("name", "Машенька")
                 .put("password", "12345678");
 
         given()
-                // port number
-                .contentType("application/json")  //another way to specify content type
+                .spec(requestSpec)
                 .body(jsonObj.toString())   // use jsonObj toString method
                 .when()
-                .post("/doregister")
+                .post()
                 .then()
-                .assertThat()
-                .statusCode(400)
-                .body("type", equalTo("error"))
-                .body("message",
-                        equalTo(" Текущее ФИО Машенька уже есть в базе"));
+                .spec(getResponseSpec(" Текущее ФИО Машенька уже есть в базе"));
 
     }
 
