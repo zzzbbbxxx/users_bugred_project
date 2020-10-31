@@ -12,6 +12,12 @@ public class DataUser {
 
     User data;
 
+
+    public String getEmail(){
+        return data.email;
+    }
+
+
     public DataUser(Response response){
 
         JSONObject json = getJsonUser(response);
@@ -36,7 +42,7 @@ public class DataUser {
 
     class User {
 
-        public String name1;
+        public String name;
         public String avatar;
         public String password;
         public long birthday;

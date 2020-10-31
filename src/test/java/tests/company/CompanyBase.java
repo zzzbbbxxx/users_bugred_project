@@ -1,27 +1,28 @@
-package tests.users;
+package tests.company;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
+import org.testng.asserts.SoftAssert;
 import restAssured.BaseReq;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasKey;
 
-public class UserBase extends BaseReq {
+public class CompanyBase extends BaseReq {
 
-    public static final String register = "/doregister";
+    public static final String company = "/createcompany";
 
     RequestSpecification requestSpec;
     ResponseSpecification responseSpec;
 
-    public UserBase (){
+    public CompanyBase(){
 
         requestSpec = new RequestSpecBuilder()
                 .setBaseUri(PATH)
-                .setBasePath(register)
+                .setBasePath(company)
                 .setContentType(ContentType.JSON)
                 .build();
 
@@ -30,7 +31,7 @@ public class UserBase extends BaseReq {
     public ResponseSpecification getResponseSpec(String message) {
 
         responseSpec = new ResponseSpecBuilder()
-                .expectStatusCode(400)
+                .expectStatusCode(200)
                 .expectBody("type", equalTo("error"))
                 .expectBody("message", equalTo(message))
                 .build();
@@ -42,14 +43,9 @@ public class UserBase extends BaseReq {
 
         responseSpec = new ResponseSpecBuilder()
                 .expectStatusCode(200)
-                .expectBody("$",hasKey("name"))
-                .expectBody("$",hasKey("avatar"))
-                .expectBody("$",hasKey("password"))
-                .expectBody("$",hasKey("birthday"))
-                .expectBody("$",hasKey("email"))
-                .expectBody("$",hasKey("gender"))
-                .expectBody("$",hasKey("date_start"))
-                .expectBody("$",hasKey("hobby"))
+                .expectBody("$",hasKey("type"))
+                .expectBody("$",hasKey("id_company"))
+                .expectBody("$",hasKey("company"))
                 .build();
 
         return responseSpec;

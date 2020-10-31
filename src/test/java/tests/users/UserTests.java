@@ -30,15 +30,7 @@ public class UserTests extends UserBase {
                 .post()
                 .then()
                 .assertThat()
-                .statusCode(200)
-                .body("$", hasKey("name"))
-                .body("$", hasKey("avatar"))
-                .body("$", hasKey("password"))
-                .body("$", hasKey("birthday"))
-                .body("$", hasKey("email"))
-                .body("$", hasKey("gender"))
-                .body("$", hasKey("date_start"))
-                .body("$", hasKey("hobby"));
+                .spec(getSuccessResponseSpec());
     }
 
 
