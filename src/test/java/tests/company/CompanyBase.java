@@ -31,7 +31,7 @@ public class CompanyBase extends BaseReq {
     public ResponseSpecification getResponseSpec(String message) {
 
         responseSpec = new ResponseSpecBuilder()
-                .expectStatusCode(200)
+                .expectStatusCode(400)
                 .expectBody("type", equalTo("error"))
                 .expectBody("message", equalTo(message))
                 .build();
